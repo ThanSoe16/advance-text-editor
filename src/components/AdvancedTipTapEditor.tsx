@@ -14,12 +14,14 @@ import { Subscript } from "@tiptap/extension-subscript";
 import { Underline } from "@tiptap/extension-underline";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
+import { Highlight } from "@tiptap/extension-highlight";
 import { Node } from "@tiptap/core";
 import { useCallback, useState, useEffect } from "react";
 import UploadArea from "./UploadArea";
 import ImageControls from "./ImageControls";
 import IframeControls from "./IframeControls";
 import ColorPicker from "./ColorPicker";
+import HighlightPicker from "./HighlightPicker";
 import TableControls from "./TableControls";
 import TextFormattingTools from "./TextFormattingTools";
 import AlignmentTools from "./AlignmentTools";
@@ -157,6 +159,9 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       TextStyle,
       Color.configure({
         types: ['textStyle'],
+      }),
+      Highlight.configure({
+        multicolor: true,
       }),
       IframeExtension,
     ],
@@ -337,6 +342,7 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
           <div className="toolbar-separator"></div>
 
           <ColorPicker editor={editor} />
+          <HighlightPicker editor={editor} />
 
           <div className="toolbar-separator"></div>
 
