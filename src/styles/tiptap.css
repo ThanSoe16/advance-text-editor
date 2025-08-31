@@ -50,6 +50,7 @@
   background: transparent;
 }
 
+
 .ProseMirror p.is-editor-empty:first-child::before {
   color: #6b7280;
   content: attr(data-placeholder);
@@ -320,12 +321,20 @@
 /* Strong and emphasis - Dark Theme */
 .ProseMirror strong {
   font-weight: 700;
-  color: #ffffff;
+}
+
+/* Allow colored bold text */
+.ProseMirror strong[style*="color"] {
+  color: inherit !important;
 }
 
 .ProseMirror em {
   font-style: italic;
-  color: #e5e7eb;
+}
+
+/* Allow colored italic text */
+.ProseMirror em[style*="color"] {
+  color: inherit !important;
 }
 
 /* Code - Dark Theme */
@@ -372,3 +381,4 @@
 .ProseMirror ol li::marker {
   color: #9ca3af;
 }
+

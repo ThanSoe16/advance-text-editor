@@ -40,8 +40,13 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ editor }) => {
   const setColor = useCallback(
     (color: string) => {
       if (editor) {
-        // Apply text style first, then set color
-        editor.chain().focus().setTextStyle({ color }).run();
+        if (editor.state.selection.empty) {
+          // No text selected - set color for typing
+          editor.chain().focus().setMark('textStyle', { color }).run();
+        } else {
+          // Text selected - apply color to selection
+          editor.chain().focus().setColor(color).run();
+        }
         setCurrentColor(color);
         setShowColorPicker(false);
       }
@@ -88,7 +93,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ editor }) => {
         <span className="text-xs">A</span>
       </button>
       {showColorPicker && (
-        <div className="absolute top-full right-0 mt-2 p-3 bg-gray-800 rounded-lg shadow-xl border border-gray-600 z-50 min-w-[200px]">
+        <div className="absolute top-full right-0 mt-2 p-3 bg-gray-800 rounded-lg shadow-xl border border-gray-600 z-[999999] min-w-[200px]">
           <div className="text-white text-sm font-medium mb-2">Text Color</div>
           <div className="grid grid-cols-6 gap-2">
             {colors.map((color) => (
@@ -108,7 +113,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ editor }) => {
           <div className="mt-3 pt-2 border-t border-gray-600">
             <button
               onClick={() => {
-                editor?.chain().focus().unsetTextStyle().run();
+                editor?.chain().focus().unsetColor().run();
                 setCurrentColor("#ffffff");
                 setShowColorPicker(false);
               }}

@@ -156,7 +156,7 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       Underline,
       TextStyle,
       Color.configure({
-        types: ["textStyle"],
+        types: ['textStyle'],
       }),
       IframeExtension,
     ],
