@@ -14,7 +14,7 @@ import { Subscript } from "@tiptap/extension-subscript";
 import { Underline } from "@tiptap/extension-underline";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
-import { Node } from '@tiptap/core';
+import { Node } from "@tiptap/core";
 import { useCallback, useState, useEffect } from "react";
 import UploadArea from "./UploadArea";
 import ImageControls from "./ImageControls";
@@ -31,8 +31,8 @@ interface AdvancedTipTapEditorProps {
 }
 
 const IframeExtension = Node.create({
-  name: 'iframe',
-  group: 'block',
+  name: "iframe",
+  group: "block",
   atom: true,
   selectable: true,
   addAttributes() {
@@ -53,40 +53,41 @@ const IframeExtension = Node.create({
         default: true,
       },
       style: {
-        default: 'max-width: 100%; border-radius: 8px; margin: 1rem 0;',
+        default: "max-width: 100%; border-radius: 8px; margin: 1rem 0;",
       },
-    }
+    };
   },
   parseHTML() {
     return [
       {
-        tag: 'iframe',
+        tag: "iframe",
       },
-    ]
+    ];
   },
   renderHTML({ HTMLAttributes }) {
-    return ['iframe', HTMLAttributes]
+    return ["iframe", HTMLAttributes];
   },
   addNodeView() {
     return ({ node, HTMLAttributes }) => {
-      const iframe = document.createElement('iframe');
-      
+      const iframe = document.createElement("iframe");
+
       // Set all attributes
       Object.entries(HTMLAttributes).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
           iframe.setAttribute(key, value);
         }
       });
-      
+
       // Disable iframe interaction to make it easier to select
-      iframe.style.pointerEvents = 'none';
-      
+      iframe.style.pointerEvents = "none";
+
       // Make it selectable by wrapping in a div
-      const wrapper = document.createElement('div');
-      wrapper.style.cssText = 'position: relative; display: block; margin: 1rem 0; cursor: pointer;';
-      wrapper.contentEditable = 'false';
+      const wrapper = document.createElement("div");
+      wrapper.style.cssText =
+        "position: relative; display: block; margin: 1rem 0; cursor: pointer;";
+      wrapper.contentEditable = "false";
       wrapper.appendChild(iframe);
-      
+
       return {
         dom: wrapper,
       };
@@ -107,7 +108,22 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
     extensions: [
       StarterKit.configure({
         dropcursor: {
-          color: '#8b5cf6',
+          color: "#8b5cf6",
+        },
+        bulletList: {
+          HTMLAttributes: {
+            class: "prose-bullet-list",
+          },
+        },
+        orderedList: {
+          HTMLAttributes: {
+            class: "prose-ordered-list",
+          },
+        },
+        listItem: {
+          HTMLAttributes: {
+            class: "prose-list-item",
+          },
         },
       }),
       TextAlign.configure({
@@ -160,7 +176,7 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       transformPastedHTML: (html: string) => html, // Don't sanitize HTML
     },
     parseOptions: {
-      preserveWhitespace: 'full',
+      preserveWhitespace: "full",
     },
     enablePasteRules: false,
     enableInputRules: false,
@@ -227,7 +243,7 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       if (!editor) {
         return;
       }
-      
+
       files.forEach((file, index) => {
         if (file.type.startsWith("image/")) {
           const reader = new FileReader();
@@ -235,10 +251,15 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
             if (reader.result && editor) {
               // Insert image using HTML with proper spacing
               const imageHtml = `<img src="${reader.result}" class="editor-image" style="max-width: 100%; height: auto; border-radius: 8px; margin: 1rem 0;" alt="uploaded image" />`;
-              
+
               // Add paragraph break if this isn't the first image
               if (index > 0) {
-                editor.chain().focus().insertContent('<p></p>').insertContent(imageHtml).run();
+                editor
+                  .chain()
+                  .focus()
+                  .insertContent("<p></p>")
+                  .insertContent(imageHtml)
+                  .run();
               } else {
                 editor.chain().focus().insertContent(imageHtml).run();
               }
@@ -247,7 +268,7 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
           reader.readAsDataURL(file);
         }
       });
-      
+
       setShowUploadArea(false);
     },
     [editor]
@@ -267,26 +288,7 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       {/* Advanced Toolbar */}
       <div className="bg-gray-800 bg-opacity-95 backdrop-blur-sm border-b border-gray-700 p-3">
         <div className="flex items-center flex-wrap gap-2">
-          {/* Undo/Redo */}
-          <button
-            onClick={() => editor.chain().focus().undo().run()}
-            disabled={!editor.can().undo()}
-            className="toolbar-button"
-            title="Undo"
-          >
-            ↶
-          </button>
-          <button
-            onClick={() => editor.chain().focus().redo().run()}
-            disabled={!editor.can().redo()}
-            className="toolbar-button"
-            title="Redo"
-          >
-            ↷
-          </button>
-
-          <div className="toolbar-separator"></div>
-
+          {/* 1. TEXT FUNCTIONS */}
           {/* Heading Dropdown */}
           <select
             className="bg-gray-700 text-white px-3 py-1 rounded border-none text-sm"
@@ -327,6 +329,17 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
             <option value="6">H6</option>
           </select>
 
+          <TextFormattingTools
+            editor={editor}
+            onAddImage={() => setShowUploadArea(true)}
+          />
+
+          <div className="toolbar-separator"></div>
+
+          <ColorPicker editor={editor} />
+
+          <div className="toolbar-separator"></div>
+
           {/* Lists */}
           <button
             onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -335,7 +348,23 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
             }`}
             title="Bullet List"
           >
-            ≡
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="8" y1="6" x2="21" y2="6" />
+              <line x1="8" y1="12" x2="21" y2="12" />
+              <line x1="8" y1="18" x2="21" y2="18" />
+              <line x1="3" y1="6" x2="3.01" y2="6" />
+              <line x1="3" y1="12" x2="3.01" y2="12" />
+              <line x1="3" y1="18" x2="3.01" y2="18" />
+            </svg>
           </button>
           <button
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -344,32 +373,56 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
             }`}
             title="Numbered List"
           >
-            ≡
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="10" y1="6" x2="21" y2="6" />
+              <line x1="10" y1="12" x2="21" y2="12" />
+              <line x1="10" y1="18" x2="21" y2="18" />
+              <path d="M4 6h1v4" />
+              <path d="M4 10h2" />
+              <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" />
+            </svg>
           </button>
-
-          <TableControls editor={editor} />
-
-          <div className="toolbar-separator"></div>
-
-          <TextFormattingTools editor={editor} />
-
-          <ColorPicker editor={editor} />
 
           <div className="toolbar-separator"></div>
 
           <AlignmentTools editor={editor} />
 
-          <ImageControls editor={editor} isImageSelected={isImageSelected} />
+          <div className="toolbar-separator"></div>
 
+          {/* 2. MEDIA FUNCTIONS (handled in TextFormattingTools now) */}
+          <ImageControls editor={editor} isImageSelected={isImageSelected} />
           <IframeControls editor={editor} isIframeSelected={isIframeSelected} />
 
-          {/* Add Button */}
+          {/* 3. TABLE FUNCTIONS */}
+          <TableControls editor={editor} />
+
+          <div className="toolbar-separator"></div>
+
+          {/* 4. UTILS */}
           <button
-            onClick={() => setShowUploadArea(true)}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-1 rounded text-sm font-medium transition-colors"
-            title="Add Images"
+            onClick={() => editor.chain().focus().undo().run()}
+            disabled={!editor.can().undo()}
+            className="toolbar-button"
+            title="Undo"
           >
-            + Add
+            ↶
+          </button>
+          <button
+            onClick={() => editor.chain().focus().redo().run()}
+            disabled={!editor.can().redo()}
+            className="toolbar-button"
+            title="Redo"
+          >
+            ↷
           </button>
 
           {/* Reset/Clear */}
@@ -388,7 +441,9 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-white text-lg font-semibold">Upload Images</h3>
+              <h3 className="text-white text-lg font-semibold">
+                Upload Images
+              </h3>
               <button
                 onClick={() => setShowUploadArea(false)}
                 className="text-gray-400 hover:text-white"

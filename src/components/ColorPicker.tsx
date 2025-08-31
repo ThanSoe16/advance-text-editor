@@ -40,7 +40,8 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ editor }) => {
   const setColor = useCallback(
     (color: string) => {
       if (editor) {
-        editor.chain().focus().setColor(color).run();
+        // Apply text style first, then set color
+        editor.chain().focus().setTextStyle({ color }).run();
         setCurrentColor(color);
         setShowColorPicker(false);
       }
@@ -107,7 +108,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ editor }) => {
           <div className="mt-3 pt-2 border-t border-gray-600">
             <button
               onClick={() => {
-                editor?.chain().focus().unsetColor().run();
+                editor?.chain().focus().unsetTextStyle().run();
                 setCurrentColor("#ffffff");
                 setShowColorPicker(false);
               }}

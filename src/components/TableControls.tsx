@@ -15,7 +15,13 @@ const TableControls: React.FC<TableControlsProps> = ({ editor }) => {
     [editor]
   );
 
-  const addTableRow = useCallback(() => {
+  const addRowAbove = useCallback(() => {
+    if (editor) {
+      editor.chain().focus().addRowBefore().run();
+    }
+  }, [editor]);
+
+  const addRowBelow = useCallback(() => {
     if (editor) {
       editor.chain().focus().addRowAfter().run();
     }
@@ -27,7 +33,13 @@ const TableControls: React.FC<TableControlsProps> = ({ editor }) => {
     }
   }, [editor]);
 
-  const addTableColumn = useCallback(() => {
+  const addColumnLeft = useCallback(() => {
+    if (editor) {
+      editor.chain().focus().addColumnBefore().run();
+    }
+  }, [editor]);
+
+  const addColumnRight = useCallback(() => {
     if (editor) {
       editor.chain().focus().addColumnAfter().run();
     }
@@ -60,7 +72,13 @@ const TableControls: React.FC<TableControlsProps> = ({ editor }) => {
           className="toolbar-button"
           title="Insert Table"
         >
-          ⊞
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M3 9h18"/>
+            <path d="M3 15h18"/>
+            <path d="M9 3v18"/>
+            <path d="M15 3v18"/>
+          </svg>
         </button>
 
         {/* Table Dropdown Menu */}
@@ -116,32 +134,80 @@ const TableControls: React.FC<TableControlsProps> = ({ editor }) => {
           <div className="flex items-center gap-1 bg-gray-700 rounded px-2 py-1">
             <span className="text-xs text-gray-300 mr-2">Table:</span>
             <button
-              onClick={addTableRow}
+              onClick={addRowAbove}
               className="toolbar-button text-xs"
-              title="Add Row"
+              title="Insert Row Above"
             >
-              +Row
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="4" y="10" width="16" height="3"/>
+                <rect x="4" y="13" width="16" height="3"/>
+                <rect x="4" y="16" width="16" height="3"/>
+                <path d="M12 5v5" stroke-width="2"/>
+                <path d="M9 7h6" stroke-width="2"/>
+              </svg>
+            </button>
+            <button
+              onClick={addRowBelow}
+              className="toolbar-button text-xs"
+              title="Insert Row Below"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="4" y="5" width="16" height="3"/>
+                <rect x="4" y="8" width="16" height="3"/>
+                <rect x="4" y="11" width="16" height="3"/>
+                <path d="M12 14v5" stroke-width="2"/>
+                <path d="M9 17h6" stroke-width="2"/>
+              </svg>
+            </button>
+            <button
+              onClick={addColumnLeft}
+              className="toolbar-button text-xs"
+              title="Insert Column Left"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="10" y="4" width="3" height="16"/>
+                <rect x="13" y="4" width="3" height="16"/>
+                <rect x="16" y="4" width="3" height="16"/>
+                <path d="M5 12h5" stroke-width="2"/>
+                <path d="M7 9v6" stroke-width="2"/>
+              </svg>
+            </button>
+            <button
+              onClick={addColumnRight}
+              className="toolbar-button text-xs"
+              title="Insert Column Right"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="5" y="4" width="3" height="16"/>
+                <rect x="8" y="4" width="3" height="16"/>
+                <rect x="11" y="4" width="3" height="16"/>
+                <path d="M14 12h5" stroke-width="2"/>
+                <path d="M17 9v6" stroke-width="2"/>
+              </svg>
             </button>
             <button
               onClick={deleteTableRow}
-              className="toolbar-button text-xs"
+              className="toolbar-button text-xs text-red-400 hover:text-red-300"
               title="Delete Row"
             >
-              -Row
-            </button>
-            <button
-              onClick={addTableColumn}
-              className="toolbar-button text-xs"
-              title="Add Column"
-            >
-              +Col
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="4" y="6" width="16" height="3"/>
+                <rect x="4" y="12" width="16" height="3" fill="currentColor" opacity="0.3"/>
+                <rect x="4" y="15" width="16" height="3"/>
+                <path d="M9 13h6" stroke-width="2"/>
+              </svg>
             </button>
             <button
               onClick={deleteTableColumn}
-              className="toolbar-button text-xs"
+              className="toolbar-button text-xs text-red-400 hover:text-red-300"
               title="Delete Column"
             >
-              -Col
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="6" y="4" width="3" height="16"/>
+                <rect x="12" y="4" width="3" height="16" fill="currentColor" opacity="0.3"/>
+                <rect x="15" y="4" width="3" height="16"/>
+                <path d="M10 12h6" stroke-width="2"/>
+              </svg>
             </button>
             <button
               onClick={toggleHeaderRow}

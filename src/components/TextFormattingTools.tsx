@@ -3,10 +3,12 @@ import { Editor } from "@tiptap/react";
 
 interface TextFormattingToolsProps {
   editor: Editor;
+  onAddImage?: () => void;
 }
 
 const TextFormattingTools: React.FC<TextFormattingToolsProps> = ({
   editor,
+  onAddImage,
 }) => {
   const addLink = useCallback(() => {
     const url = window.prompt("Enter URL:");
@@ -119,22 +121,6 @@ const TextFormattingTools: React.FC<TextFormattingToolsProps> = ({
         U
       </button>
 
-      {/* Link */}
-      <button
-        onClick={addLink}
-        className={`toolbar-button ${editor.isActive("link") ? "active" : ""}`}
-        title="Insert Link"
-      >
-        🔗
-      </button>
-      <button
-        onClick={addVideoLink}
-        className="toolbar-button"
-        title="Insert Video"
-      >
-        📹
-      </button>
-
       {/* Super/Subscript */}
       <button
         onClick={() => editor.chain().focus().toggleSuperscript().run()}
@@ -153,6 +139,42 @@ const TextFormattingTools: React.FC<TextFormattingToolsProps> = ({
         title="Subscript"
       >
         x₂
+      </button>
+
+      {/* Media - Link, Video, Image */}
+      <button
+        onClick={addLink}
+        className={`toolbar-button ${editor.isActive("link") ? "active" : ""}`}
+        title="Insert Link"
+      >
+        🔗
+      </button>
+      <button
+        onClick={addVideoLink}
+        className="toolbar-button"
+        title="Insert Video"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="18" height="18" x="3" y="3" rx="2"/>
+          <path d="M7 3v18"/>
+          <path d="M3 7.5h4"/>
+          <path d="M3 12h18"/>
+          <path d="M3 16.5h4"/>
+          <path d="M17 3v18"/>
+          <path d="M17 7.5h4"/>
+          <path d="17 16.5h4"/>
+        </svg>
+      </button>
+      <button
+        onClick={onAddImage}
+        className="toolbar-button"
+        title="Add Images"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+          <circle cx="9" cy="9" r="2"/>
+          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+        </svg>
       </button>
     </>
   );
