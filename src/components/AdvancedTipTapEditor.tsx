@@ -14,9 +14,11 @@ import { Subscript } from "@tiptap/extension-subscript";
 import { Underline } from "@tiptap/extension-underline";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
+import { Node } from '@tiptap/core';
 import { useCallback, useState, useEffect } from "react";
 import UploadArea from "./UploadArea";
 import ImageControls from "./ImageControls";
+import IframeControls from "./IframeControls";
 import ColorPicker from "./ColorPicker";
 import TableControls from "./TableControls";
 import TextFormattingTools from "./TextFormattingTools";
@@ -28,6 +30,70 @@ interface AdvancedTipTapEditorProps {
   placeholder?: string;
 }
 
+const IframeExtension = Node.create({
+  name: 'iframe',
+  group: 'block',
+  atom: true,
+  selectable: true,
+  addAttributes() {
+    return {
+      src: {
+        default: null,
+      },
+      width: {
+        default: 560,
+      },
+      height: {
+        default: 315,
+      },
+      frameborder: {
+        default: 0,
+      },
+      allowfullscreen: {
+        default: true,
+      },
+      style: {
+        default: 'max-width: 100%; border-radius: 8px; margin: 1rem 0;',
+      },
+    }
+  },
+  parseHTML() {
+    return [
+      {
+        tag: 'iframe',
+      },
+    ]
+  },
+  renderHTML({ HTMLAttributes }) {
+    return ['iframe', HTMLAttributes]
+  },
+  addNodeView() {
+    return ({ node, HTMLAttributes }) => {
+      const iframe = document.createElement('iframe');
+      
+      // Set all attributes
+      Object.entries(HTMLAttributes).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          iframe.setAttribute(key, value);
+        }
+      });
+      
+      // Disable iframe interaction to make it easier to select
+      iframe.style.pointerEvents = 'none';
+      
+      // Make it selectable by wrapping in a div
+      const wrapper = document.createElement('div');
+      wrapper.style.cssText = 'position: relative; display: block; margin: 1rem 0; cursor: pointer;';
+      wrapper.contentEditable = 'false';
+      wrapper.appendChild(iframe);
+      
+      return {
+        dom: wrapper,
+      };
+    };
+  },
+});
+
 const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
   value,
   onChange,
@@ -35,10 +101,15 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
 }) => {
   const [showUploadArea, setShowUploadArea] = useState(false);
   const [isImageSelected, setIsImageSelected] = useState(false);
+  const [isIframeSelected, setIsIframeSelected] = useState(false);
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        dropcursor: {
+          color: '#8b5cf6',
+        },
+      }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
@@ -71,6 +142,7 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       Color.configure({
         types: ["textStyle"],
       }),
+      IframeExtension,
     ],
     content: value,
     immediatelyRender: false,
@@ -82,75 +154,100 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
         class: "prose prose-lg max-w-none focus:outline-none editor-content",
         "data-placeholder": placeholder,
       },
+      handleDOMEvents: {
+        // Allow video elements to be rendered
+      },
+      transformPastedHTML: (html: string) => html, // Don't sanitize HTML
     },
+    parseOptions: {
+      preserveWhitespace: 'full',
+    },
+    enablePasteRules: false,
+    enableInputRules: false,
   });
 
   useEffect(() => {
     if (!editor) return;
 
-    const updateImageSelection = () => {
+    const updateSelection = () => {
       const { state } = editor;
       const { selection } = state;
 
-      // Check if the selection includes an image node
+      // Check if the selection includes an image or iframe node
       let hasImageSelected = false;
+      let hasIframeSelected = false;
 
-      // Check if current selection is on an image
+      // Check if current selection is on an image or iframe
       state.doc.nodesBetween(selection.from, selection.to, (node) => {
         if (node.type.name === "image") {
           hasImageSelected = true;
           return false; // Stop iteration
         }
+        if (node.type.name === "iframe") {
+          hasIframeSelected = true;
+          return false; // Stop iteration
+        }
       });
 
-      // Also check for direct image selection via DOM
-      if (!hasImageSelected) {
+      // Also check for direct selection via DOM
+      if (!hasImageSelected && !hasIframeSelected) {
         const selectedElement = document.querySelector(
           ".ProseMirror-selectednode"
         );
         hasImageSelected = selectedElement?.tagName === "IMG";
+        hasIframeSelected = selectedElement?.tagName === "IFRAME";
       }
 
       setIsImageSelected(hasImageSelected);
+      setIsIframeSelected(hasIframeSelected);
     };
 
     // Update on selection change and clicks
-    editor.on("selectionUpdate", updateImageSelection);
-    editor.on("transaction", updateImageSelection);
-    editor.on("focus", updateImageSelection);
+    editor.on("selectionUpdate", updateSelection);
+    editor.on("transaction", updateSelection);
+    editor.on("focus", updateSelection);
 
     // Also listen for clicks on the editor
     const editorElement = editor.view.dom;
-    editorElement.addEventListener("click", updateImageSelection);
+    editorElement.addEventListener("click", updateSelection);
 
     // Initial check
-    updateImageSelection();
+    updateSelection();
 
     return () => {
-      editor.off("selectionUpdate", updateImageSelection);
-      editor.off("transaction", updateImageSelection);
-      editor.off("focus", updateImageSelection);
-      editorElement.removeEventListener("click", updateImageSelection);
+      editor.off("selectionUpdate", updateSelection);
+      editor.off("transaction", updateSelection);
+      editor.off("focus", updateSelection);
+      editorElement.removeEventListener("click", updateSelection);
     };
   }, [editor]);
 
   const handleFileUpload = useCallback(
     (files: File[]) => {
-      files.forEach((file) => {
+      if (!editor) {
+        return;
+      }
+      
+      files.forEach((file, index) => {
         if (file.type.startsWith("image/")) {
           const reader = new FileReader();
           reader.onload = () => {
             if (reader.result && editor) {
-              editor
-                .chain()
-                .focus()
-                .setImage({ src: reader.result as string })
-                .run();
+              // Insert image using HTML with proper spacing
+              const imageHtml = `<img src="${reader.result}" class="editor-image" style="max-width: 100%; height: auto; border-radius: 8px; margin: 1rem 0;" alt="uploaded image" />`;
+              
+              // Add paragraph break if this isn't the first image
+              if (index > 0) {
+                editor.chain().focus().insertContent('<p></p>').insertContent(imageHtml).run();
+              } else {
+                editor.chain().focus().insertContent(imageHtml).run();
+              }
             }
           };
           reader.readAsDataURL(file);
         }
       });
+      
       setShowUploadArea(false);
     },
     [editor]
@@ -264,11 +361,13 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
 
           <ImageControls editor={editor} isImageSelected={isImageSelected} />
 
+          <IframeControls editor={editor} isIframeSelected={isIframeSelected} />
+
           {/* Add Button */}
           <button
             onClick={() => setShowUploadArea(true)}
             className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-1 rounded text-sm font-medium transition-colors"
-            title="Add Media"
+            title="Add Images"
           >
             + Add
           </button>
@@ -289,7 +388,7 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-white text-lg font-semibold">Upload Files</h3>
+              <h3 className="text-white text-lg font-semibold">Upload Images</h3>
               <button
                 onClick={() => setShowUploadArea(false)}
                 className="text-gray-400 hover:text-white"

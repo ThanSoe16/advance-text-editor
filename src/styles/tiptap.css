@@ -197,11 +197,33 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+
 /* Image Selection */
 .ProseMirror img.ProseMirror-selectednode {
   outline: 3px solid #8b5cf6;
   outline-offset: 2px;
 }
+
+/* Iframe Styles */
+.ProseMirror iframe {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 1rem 0;
+  display: block;
+}
+
+/* Iframe Selection */
+.ProseMirror .ProseMirror-selectednode iframe {
+  outline: 3px solid #8b5cf6;
+  outline-offset: 2px;
+}
+
+.ProseMirror div.ProseMirror-selectednode {
+  outline: 3px solid #8b5cf6;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
 
 /* Image Size Styles - High specificity to override inline styles */
 .ProseMirror img[data-size="small"] {
