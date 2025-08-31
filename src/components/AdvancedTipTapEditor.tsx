@@ -26,6 +26,13 @@ import LineSpacing from "./LineSpacing";
 import TableControls from "./TableControls";
 import TextFormattingTools from "./TextFormattingTools";
 import AlignmentTools from "./AlignmentTools";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface AdvancedTipTapEditorProps {
   value: string;
@@ -159,11 +166,11 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       Underline,
       TextStyle.configure({
         HTMLAttributes: {
-          class: 'text-style',
+          class: "text-style",
         },
       }),
       Color.configure({
-        types: ['textStyle'],
+        types: ["textStyle"],
       }),
       Highlight.configure({
         multicolor: true,
@@ -300,20 +307,7 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
         <div className="flex items-center flex-wrap gap-2">
           {/* 1. TEXT FUNCTIONS */}
           {/* Heading Dropdown */}
-          <select
-            className="bg-gray-700 text-white px-3 py-1 rounded border-none text-sm"
-            onChange={(e) => {
-              const level = parseInt(e.target.value);
-              if (level) {
-                editor
-                  .chain()
-                  .focus()
-                  .toggleHeading({ level: level as any })
-                  .run();
-              } else {
-                editor.chain().focus().setParagraph().run();
-              }
-            }}
+          <Select
             value={
               editor.isActive("heading", { level: 1 })
                 ? "1"
@@ -329,15 +323,67 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
                 ? "6"
                 : "0"
             }
+            onValueChange={(value) => {
+              const level = parseInt(value);
+              if (level) {
+                editor
+                  .chain()
+                  .focus()
+                  .toggleHeading({ level: level as any })
+                  .run();
+              } else {
+                editor.chain().focus().setParagraph().run();
+              }
+            }}
           >
-            <option value="0">Normal</option>
-            <option value="1">H1</option>
-            <option value="2">H2</option>
-            <option value="3">H3</option>
-            <option value="4">H4</option>
-            <option value="5">H5</option>
-            <option value="6">H6</option>
-          </select>
+            <SelectTrigger className="min-w-32 max-w-42 h-8 bg-gray-700 border-gray-600 text-gray-300 text-sm">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-gray-800 border-gray-600 text-gray-300">
+              <SelectItem
+                value="0"
+                className="text-gray-300 focus:bg-gray-700 focus:text-white"
+              >
+                Normal text
+              </SelectItem>
+              <SelectItem
+                value="1"
+                className="text-gray-300 focus:bg-gray-700 focus:text-white"
+              >
+                <span className="text-2xl font-bold">Heading 1</span>
+              </SelectItem>
+              <SelectItem
+                value="2"
+                className="text-gray-300 focus:bg-gray-700 focus:text-white"
+              >
+                <span className="text-xl font-bold">Heading 2</span>
+              </SelectItem>
+              <SelectItem
+                value="3"
+                className="text-gray-300 focus:bg-gray-700 focus:text-white"
+              >
+                <span className="text-lg font-bold">Heading 3</span>
+              </SelectItem>
+              <SelectItem
+                value="4"
+                className="text-gray-300 focus:bg-gray-700 focus:text-white"
+              >
+                <span className="text-base font-bold">Heading 4</span>
+              </SelectItem>
+              <SelectItem
+                value="5"
+                className="text-gray-300 focus:bg-gray-700 focus:text-white"
+              >
+                <span className="text-sm font-bold">Heading 5</span>
+              </SelectItem>
+              <SelectItem
+                value="6"
+                className="text-gray-300 focus:bg-gray-700 focus:text-white"
+              >
+                <span className="text-xs font-bold">Heading 6</span>
+              </SelectItem>
+            </SelectContent>
+          </Select>
 
           <TextFormattingTools
             editor={editor}
