@@ -22,6 +22,7 @@ import ImageControls from "./ImageControls";
 import IframeControls from "./IframeControls";
 import ColorPicker from "./ColorPicker";
 import HighlightPicker from "./HighlightPicker";
+import LineSpacing from "./LineSpacing";
 import TableControls from "./TableControls";
 import TextFormattingTools from "./TextFormattingTools";
 import AlignmentTools from "./AlignmentTools";
@@ -156,7 +157,11 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       Superscript,
       Subscript,
       Underline,
-      TextStyle,
+      TextStyle.configure({
+        HTMLAttributes: {
+          class: 'text-style',
+        },
+      }),
       Color.configure({
         types: ['textStyle'],
       }),
@@ -343,6 +348,7 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
 
           <ColorPicker editor={editor} />
           <HighlightPicker editor={editor} />
+          <LineSpacing editor={editor} />
 
           <div className="toolbar-separator"></div>
 
