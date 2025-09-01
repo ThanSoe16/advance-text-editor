@@ -80,6 +80,9 @@ const IframeExtension = Node.create({
       style: {
         default: "max-width: 100%; border-radius: 8px; margin: 1rem 0;",
       },
+      'data-align': {
+        default: null,
+      },
     };
   },
   parseHTML() {

@@ -12,8 +12,9 @@ const IframeControls: React.FC<IframeControlsProps> = ({
 }) => {
   const [iframeWidth, setIframeWidth] = useState("");
   const [iframeHeight, setIframeHeight] = useState("");
+  const [currentAlign, setCurrentAlign] = useState("");
 
-  // Update input values when iframe is selected
+  // Update state when iframe is selected
   useEffect(() => {
     if (!editor || !isIframeSelected) return;
 
@@ -24,6 +25,7 @@ const IframeControls: React.FC<IframeControlsProps> = ({
       if (node.type.name === "iframe") {
         const currentWidth = String(node.attrs.width || "100");
         const currentHeight = String(node.attrs.height || "315");
+        const align = node.attrs['data-align'] || "";
         
         // Remove % or px from width for display
         const widthValue = currentWidth.replace('%', '').replace('px', '');
@@ -31,6 +33,7 @@ const IframeControls: React.FC<IframeControlsProps> = ({
         
         setIframeWidth(widthValue);
         setIframeHeight(heightValue);
+        setCurrentAlign(align);
         return false;
       }
     });
@@ -61,6 +64,19 @@ const IframeControls: React.FC<IframeControlsProps> = ({
       updateIframeSize();
     }
   }, [iframeWidth, iframeHeight, isIframeSelected, updateIframeSize]);
+
+  const updateIframeAlign = useCallback((align: string) => {
+    if (!editor || !isIframeSelected) return;
+
+    editor
+      .chain()
+      .updateAttributes("iframe", {
+        'data-align': align || null,
+      })
+      .run();
+    
+    setCurrentAlign(align);
+  }, [editor, isIframeSelected]);
 
   const deleteIframe = useCallback(() => {
     if (!editor || !isIframeSelected) return;
@@ -114,6 +130,39 @@ const IframeControls: React.FC<IframeControlsProps> = ({
           />
           <span className="text-xs text-gray-400">px</span>
         </div>
+        
+        {/* Alignment Controls */}
+        <div className="flex items-center gap-1 ml-2">
+          <button
+            onClick={() => updateIframeAlign("left")}
+            className={`toolbar-button text-xs ${currentAlign === "left" ? "active" : ""}`}
+            title="Align Left"
+          >
+            ⬅️
+          </button>
+          <button
+            onClick={() => updateIframeAlign("center")}
+            className={`toolbar-button text-xs ${currentAlign === "center" ? "active" : ""}`}
+            title="Align Center"
+          >
+            ↔️
+          </button>
+          <button
+            onClick={() => updateIframeAlign("right")}
+            className={`toolbar-button text-xs ${currentAlign === "right" ? "active" : ""}`}
+            title="Align Right"
+          >
+            ➡️
+          </button>
+          <button
+            onClick={() => updateIframeAlign("")}
+            className={`toolbar-button text-xs ${!currentAlign ? "active" : ""}`}
+            title="No Alignment"
+          >
+            ↕️
+          </button>
+        </div>
+        
         <button
           onClick={deleteIframe}
           className="toolbar-button text-red-400 hover:text-red-300 ml-1"

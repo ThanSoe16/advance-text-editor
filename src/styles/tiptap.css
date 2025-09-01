@@ -533,6 +533,31 @@
   vertical-align: top;
 }
 
+/* Iframe Alignment Styles */
+.ProseMirror iframe[data-align="left"] {
+  float: left !important;
+  margin: 0 1rem 1rem 0 !important;
+  display: block !important;
+}
+
+.ProseMirror iframe[data-align="center"] {
+  float: none !important;
+  display: block !important;
+  margin: 1rem auto !important;
+  clear: both !important;
+}
+
+.ProseMirror iframe[data-align="right"] {
+  float: right !important;
+  margin: 0 0 1rem 1rem !important;
+  display: block !important;
+}
+
+/* Reset any conflicting iframe styles */
+.ProseMirror iframe[data-align] {
+  vertical-align: top;
+}
+
 /* Focus styles */
 .ProseMirror:focus {
   outline: none;
