@@ -17,12 +17,12 @@ pnpm add adv-editor
 ### Basic Usage
 
 ```tsx
-import React, { useState } from "react";
-import { AdvancedTipTapEditor } from "adv-editor";
-import "adv-editor/styles";
+import React, { useState } from 'react';
+import { AdvancedTipTapEditor } from 'adv-editor';
+import 'adv-editor/styles';
 
 function App() {
-  const [content, setContent] = useState("<p>Hello world!</p>");
+  const [content, setContent] = useState('<p>Hello world!</p>');
 
   return (
     <AdvancedTipTapEditor
@@ -38,12 +38,12 @@ function App() {
 ### With Theme Provider (Recommended)
 
 ```tsx
-import React, { useState } from "react";
-import { AdvancedTipTapEditor, ThemeProvider } from "adv-editor";
-import "adv-editor/styles";
+import React, { useState } from 'react';
+import { AdvancedTipTapEditor, ThemeProvider } from 'adv-editor';
+import 'adv-editor/styles';
 
 function App() {
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState('');
 
   return (
     <ThemeProvider>
@@ -64,31 +64,34 @@ function App() {
 
 ### AdvancedTipTapEditor Props
 
-| Prop          | Type                      | Required | Default              | Description                            |
-| ------------- | ------------------------- | -------- | -------------------- | -------------------------------------- |
-| `value`       | `string`                  | Yes      | -                    | HTML content of the editor             |
-| `onChange`    | `(value: string) => void` | Yes      | -                    | Callback when content changes          |
-| `theme`       | `'light' \| 'dark'`       | No       | `'dark'`             | Editor theme (overrides ThemeProvider) |
-| `placeholder` | `string`                  | No       | `'Start writing...'` | Placeholder text when editor is empty  |
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `value` | `string` | Yes | - | HTML content of the editor |
+| `onChange` | `(value: string) => void` | Yes | - | Callback when content changes |
+| `theme` | `'light' \| 'dark'` | No | `'dark'` | Editor theme (overrides ThemeProvider) |
+| `placeholder` | `string` | No | `'Start writing...'` | Placeholder text when editor is empty |
 
 ### ThemeProvider
 
 Wrap your app or editor component to provide theme context:
 
 ```tsx
-import { ThemeProvider, useTheme } from "adv-editor";
+import { ThemeProvider, useTheme } from 'adv-editor';
 
 // Custom theme controls
 function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
-  return <button onClick={toggleTheme}>Current theme: {theme}</button>;
+  return (
+    <button onClick={toggleTheme}>
+      Current theme: {theme}
+    </button>
+  );
 }
 ```
 
 ## ✨ Features
 
 ### Text Formatting
-
 - **Basic formatting**: Bold, italic, underline, strikethrough
 - **Advanced typography**: Superscript, subscript
 - **Headings**: H1-H6 with dropdown selector
@@ -98,7 +101,6 @@ function ThemeToggle() {
 - **Highlighting**: Multi-color text highlighting
 
 ### Lists and Structure
-
 - **Bullet lists**: Unordered lists with custom styling
 - **Numbered lists**: Ordered lists with proper numbering
 - **Task lists**: Interactive checkboxes and nested tasks
@@ -106,21 +108,18 @@ function ThemeToggle() {
 - **Code blocks**: Syntax-highlighted code sections
 
 ### Media and Embeds
-
 - **Image upload**: Drag-and-drop or click to upload
 - **Image controls**: Resize, align, and style uploaded images
 - **Iframe embedding**: Embed videos, maps, and other content
 - **Responsive design**: All media scales properly on mobile
 
 ### Tables
-
 - **Table creation**: Insert tables with custom rows/columns
 - **Table editing**: Add/remove rows and columns dynamically
 - **Cell formatting**: Format individual table cells
 - **Resizable columns**: Drag to resize table columns
 
 ### Advanced Features
-
 - **Undo/redo**: Full history management
 - **Link insertion**: Add and edit hyperlinks
 - **Theme switching**: Built-in dark/light mode toggle
@@ -132,7 +131,7 @@ function ThemeToggle() {
 The editor comes with built-in styles that work out of the box. Import the CSS:
 
 ```tsx
-import "adv-editor/styles";
+import 'adv-editor/styles';
 ```
 
 ### Custom Styling
@@ -167,13 +166,13 @@ The editor uses CSS classes that you can override:
 You can also import and use individual components for custom toolbars:
 
 ```tsx
-import {
+import { 
   TextFormattingTools,
   ColorPicker,
   AlignmentTools,
   TableControls,
-  ImageControls,
-} from "adv-editor";
+  ImageControls 
+} from 'adv-editor';
 ```
 
 ### Custom Extensions

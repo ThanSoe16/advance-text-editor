@@ -1,7 +1,6 @@
 {
-  "name": "advance-text-editor",
-  "version": "0.1.0",
-  "private": true,
+  "name": "adv-editor",
+  "version": "1.0.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -46,13 +45,32 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.4",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
+    "rollup": "^4.50.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "description": "A feature-rich TipTap-based React text editor with advanced formatting options",
+  "main": "rollup.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThanSoe16/advance-text-editor.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ThanSoe16/advance-text-editor/issues"
+  },
+  "homepage": "https://github.com/ThanSoe16/advance-text-editor#readme"
 }

@@ -41,6 +41,7 @@ import {
 interface AdvancedTipTapEditorProps {
   value: string;
   onChange: (value: string) => void;
+  theme?: 'light' | 'dark';
   placeholder?: string;
 }
 
@@ -112,9 +113,12 @@ const IframeExtension = Node.create({
 const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
   value,
   onChange,
+  theme: propTheme,
   placeholder = "Start writing...",
 }) => {
-  const { theme, toggleTheme } = useTheme();
+  const context = useTheme();
+  const theme = propTheme || context?.theme || 'dark';
+  const toggleTheme = context?.toggleTheme;
   const [showUploadArea, setShowUploadArea] = useState(false);
   const [isImageSelected, setIsImageSelected] = useState(false);
   const [isIframeSelected, setIsIframeSelected] = useState(false);
@@ -570,13 +574,15 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
           <TableControls editor={editor} />
 
           {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="toolbar-button"
-            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-          >
-            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-          </button>
+          {toggleTheme && (
+            <button
+              onClick={toggleTheme}
+              className="toolbar-button"
+              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
+          )}
 
           {/* Reset/Clear */}
           <button
