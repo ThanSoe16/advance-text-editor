@@ -18,6 +18,7 @@ import {
 } from "./icons/TableIcons";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/contexts/ThemeContext";
+import TableBorderColorPicker from "./TableBorderColorPicker";
 
 interface TableControlsProps {
   editor: Editor;
@@ -201,6 +202,7 @@ const TableControls: React.FC<TableControlsProps> = ({ editor }) => {
             >
               Header
             </button>
+            <TableBorderColorPicker editor={editor} />
             <button
               onClick={deleteTable}
               className="toolbar-button text-xs text-red-400 hover:text-red-300"

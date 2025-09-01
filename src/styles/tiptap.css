@@ -332,6 +332,37 @@
   color: #374151;
 }
 
+/* Table Border Color Picker - Dark Theme */
+[data-theme="dark"] .table-border-color-picker {
+  background: #1f2937;
+  border-color: #4b5563;
+}
+
+[data-theme="dark"] .table-border-color-title {
+  color: white;
+}
+
+/* Table Border Color Picker - Light Theme */
+[data-theme="light"] .table-border-color-picker {
+  background: white;
+  border-color: #e5e7eb;
+}
+
+[data-theme="light"] .table-border-color-title {
+  color: #111827;
+}
+
+/* Custom Border Color Support */
+.ProseMirror table.custom-border-color {
+  border-color: var(--table-border-color) !important;
+}
+
+.ProseMirror table.custom-border-color td,
+.ProseMirror table.custom-border-color th {
+  border-right-color: var(--table-border-color) !important;
+  border-bottom-color: var(--table-border-color) !important;
+}
+
 /* Select Box Theme Styles - Higher specificity for Radix UI */
 [data-theme="dark"] .select-trigger,
 [data-theme="dark"] [data-radix-select-trigger],
