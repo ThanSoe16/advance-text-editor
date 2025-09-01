@@ -216,6 +216,7 @@
 /* Regular Table Styles - Dark Theme */
 .ProseMirror table:not(.borderless-table) {
   border-collapse: collapse;
+  width: 100%;
   margin: 1.5rem 0;
   border: 1px solid #374151;
   background: rgba(31, 41, 55, 0.5);
@@ -256,6 +257,114 @@
 .ProseMirror .tableWrapper .selectedCell {
   background: rgba(139, 92, 246, 0.2) !important;
 }
+
+/* Table Controls Container - Dark Theme */
+[data-theme="dark"] .table-controls-container {
+  background: #374151;
+}
+
+[data-theme="dark"] .table-controls-label {
+  color: #d1d5db;
+}
+
+/* Table Controls Container - Light Theme */
+[data-theme="light"] .table-controls-container {
+  background: #f3f4f6;
+}
+
+[data-theme="light"] .table-controls-label {
+  color: #374151;
+}
+
+/* Image Controls Container - Dark Theme */
+[data-theme="dark"] .image-controls-container {
+  background: #374151;
+}
+
+[data-theme="dark"] .image-controls-label {
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .image-controls-border {
+  border-left: 1px solid #4b5563;
+}
+
+[data-theme="dark"] .image-controls-input {
+  background: #1f2937;
+  color: white;
+  border: 1px solid #4b5563;
+}
+
+[data-theme="dark"] .image-controls-unit {
+  color: #9ca3af;
+}
+
+/* Image Controls Container - Light Theme */
+[data-theme="light"] .image-controls-container {
+  background: #f3f4f6;
+}
+
+[data-theme="light"] .image-controls-label {
+  color: #374151;
+}
+
+[data-theme="light"] .image-controls-border {
+  border-left: 1px solid #d1d5db;
+}
+
+[data-theme="light"] .image-controls-input {
+  background: white;
+  color: #111827;
+  border: 1px solid #d1d5db;
+}
+
+[data-theme="light"] .image-controls-unit {
+  color: #6b7280;
+}
+
+/* Select Box Theme Styles */
+[data-theme="dark"] .select-trigger {
+  background: #374151;
+  border-color: #4b5563;
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .select-content {
+  background: #1f2937;
+  border-color: #4b5563;
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .select-item {
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .select-item:focus {
+  background: #374151;
+  color: white;
+}
+
+[data-theme="light"] .select-trigger {
+  background: white;
+  border-color: #d1d5db;
+  color: #374151;
+}
+
+[data-theme="light"] .select-content {
+  background: white;
+  border-color: #d1d5db;
+  color: #374151;
+}
+
+[data-theme="light"] .select-item {
+  color: #374151;
+}
+
+[data-theme="light"] .select-item:focus {
+  background: #f3f4f6;
+  color: #111827;
+}
+
 
 /* Task List Styling */
 .ProseMirror ul[data-type="taskList"] {

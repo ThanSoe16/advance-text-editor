@@ -37,15 +37,15 @@ const LineSpacing: React.FC<LineSpacingProps> = ({ editor }) => {
 
   return (
     <Select value={currentSpacing} onValueChange={setLineSpacing}>
-      <SelectTrigger className="w-20 h-8 bg-gray-700 border-gray-600 text-gray-300 text-sm">
+      <SelectTrigger className="w-20 h-8 text-sm select-trigger">
         <SelectValue />
       </SelectTrigger>
-      <SelectContent className="bg-gray-800 border-gray-600 text-gray-300">
+      <SelectContent className="select-content">
         {spacingOptions.map((option) => (
           <SelectItem
             key={option.value}
             value={option.value}
-            className="text-gray-300 focus:bg-gray-700 focus:text-white"
+            className="select-item"
           >
             {option.name}
           </SelectItem>

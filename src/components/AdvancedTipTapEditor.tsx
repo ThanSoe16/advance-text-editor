@@ -377,49 +377,49 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
               }
             }}
           >
-            <SelectTrigger className="min-w-32 max-w-42 h-8 bg-gray-700 border-gray-600 text-gray-300 text-sm">
+            <SelectTrigger className="min-w-32 max-w-42 h-8 text-sm select-trigger">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-gray-800 border-gray-600 text-gray-300">
+            <SelectContent className="select-content">
               <SelectItem
                 value="0"
-                className="text-gray-300 focus:bg-gray-700 focus:text-white"
+                className="select-item"
               >
                 Normal text
               </SelectItem>
               <SelectItem
                 value="1"
-                className="text-gray-300 focus:bg-gray-700 focus:text-white"
+                className="select-item"
               >
                 <span className="text-2xl font-bold">Heading 1</span>
               </SelectItem>
               <SelectItem
                 value="2"
-                className="text-gray-300 focus:bg-gray-700 focus:text-white"
+                className="select-item"
               >
                 <span className="text-xl font-bold">Heading 2</span>
               </SelectItem>
               <SelectItem
                 value="3"
-                className="text-gray-300 focus:bg-gray-700 focus:text-white"
+                className="select-item"
               >
                 <span className="text-lg font-bold">Heading 3</span>
               </SelectItem>
               <SelectItem
                 value="4"
-                className="text-gray-300 focus:bg-gray-700 focus:text-white"
+                className="select-item"
               >
                 <span className="text-base font-bold">Heading 4</span>
               </SelectItem>
               <SelectItem
                 value="5"
-                className="text-gray-300 focus:bg-gray-700 focus:text-white"
+                className="select-item"
               >
                 <span className="text-sm font-bold">Heading 5</span>
               </SelectItem>
               <SelectItem
                 value="6"
-                className="text-gray-300 focus:bg-gray-700 focus:text-white"
+                className="select-item"
               >
                 <span className="text-xs font-bold">Heading 6</span>
               </SelectItem>

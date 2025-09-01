@@ -113,8 +113,8 @@ const ImageControls: React.FC<ImageControlsProps> = ({ editor, isImageSelected }
   return (
     <>
       <div className="toolbar-separator"></div>
-      <div className="flex items-center gap-2 bg-gray-700 rounded px-2 py-1">
-        <span className="text-xs text-gray-300">Size:</span>
+      <div className="flex items-center gap-2 image-controls-container rounded px-2 py-1">
+        <span className="text-xs image-controls-label">Size:</span>
         <button
           onClick={() => setImageSize("small")}
           className="toolbar-button text-xs"
@@ -144,18 +144,18 @@ const ImageControls: React.FC<ImageControlsProps> = ({ editor, isImageSelected }
           Full
         </button>
 
-        <div className="flex items-center gap-1 ml-2 pl-2 border-l border-gray-600">
-          <span className="text-xs text-gray-300">Custom:</span>
+        <div className="flex items-center gap-1 ml-2 pl-2 image-controls-border">
+          <span className="text-xs image-controls-label">Custom:</span>
           <input
             type="text"
             placeholder="Size"
             value={imageWidth}
             onChange={(e) => setImageWidth(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && setCustomImageSize()}
-            className="w-16 h-10 px-1 py-0.5 text-xs bg-gray-800 text-white border border-gray-600 rounded"
+            className="w-16 h-10 px-1 py-0.5 text-xs image-controls-input rounded"
             title="Width in pixels (100 for full width)"
           />
-          <span className="text-xs text-gray-400">px</span>
+          <span className="text-xs image-controls-unit">px</span>
         </div>
       </div>
     </>
