@@ -7,6 +7,7 @@ import { TableRow } from "@tiptap/extension-table-row";
 import { TableHeader } from "@tiptap/extension-table-header";
 import { TableCell } from "@tiptap/extension-table-cell";
 import { Image } from "@tiptap/extension-image";
+import ImageResize from "tiptap-extension-resize-image";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Link } from "@tiptap/extension-link";
 import { Superscript } from "@tiptap/extension-superscript";
@@ -20,7 +21,6 @@ import { TaskItem } from "@tiptap/extension-task-item";
 import { Node } from "@tiptap/core";
 import { useCallback, useState, useEffect } from "react";
 import UploadArea from "./UploadArea";
-import ImageControls from "./ImageControls";
 import IframeControls from "./IframeControls";
 import ColorPicker from "./ColorPicker";
 import HighlightPicker from "./HighlightPicker";
@@ -28,6 +28,16 @@ import LineSpacing from "./LineSpacing";
 import TableControls from "./TableControls";
 import TextFormattingTools from "./TextFormattingTools";
 import AlignmentTools from "./AlignmentTools";
+import LinkControls from "./LinkControls";
+import VideoControls from "./VideoControls";
+import ImageControls from "./ImageControls";
+import {
+  BlockquoteIcon,
+  CodeBlockIcon,
+  BulletListIcon,
+  NumberedListIcon,
+  TaskListIcon,
+} from "./icons";
 import { Undo2, Redo2, RotateCcw, Sun, Moon } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
 import {
@@ -41,7 +51,7 @@ import {
 interface AdvancedTipTapEditorProps {
   value: string;
   onChange: (value: string) => void;
-  theme?: 'light' | 'dark';
+  theme?: "light" | "dark";
   placeholder?: string;
 }
 
@@ -117,10 +127,9 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
   placeholder = "Start writing...",
 }) => {
   const context = useTheme();
-  const theme = propTheme || context?.theme || 'dark';
+  const theme = propTheme || context?.theme || "dark";
   const toggleTheme = context?.toggleTheme;
   const [showUploadArea, setShowUploadArea] = useState(false);
-  const [isImageSelected, setIsImageSelected] = useState(false);
   const [isIframeSelected, setIsIframeSelected] = useState(false);
 
   const editor = useEditor({
@@ -148,7 +157,7 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
-      Image.configure({
+      ImageResize.configure({
         inline: false,
         allowBase64: true,
         HTMLAttributes: {
@@ -163,9 +172,6 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       }),
       Table.configure({
         resizable: true,
-        HTMLAttributes: {
-          class: "borderless-table",
-        },
       }),
       TableRow,
       TableHeader,
@@ -219,16 +225,11 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       const { state } = editor;
       const { selection } = state;
 
-      // Check if the selection includes an image or iframe node
-      let hasImageSelected = false;
+      // Check if the selection includes an iframe node
       let hasIframeSelected = false;
 
-      // Check if current selection is on an image or iframe
+      // Check if current selection is on an iframe
       state.doc.nodesBetween(selection.from, selection.to, (node) => {
-        if (node.type.name === "image") {
-          hasImageSelected = true;
-          return false; // Stop iteration
-        }
         if (node.type.name === "iframe") {
           hasIframeSelected = true;
           return false; // Stop iteration
@@ -236,15 +237,13 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       });
 
       // Also check for direct selection via DOM
-      if (!hasImageSelected && !hasIframeSelected) {
+      if (!hasIframeSelected) {
         const selectedElement = document.querySelector(
           ".ProseMirror-selectednode"
         );
-        hasImageSelected = selectedElement?.tagName === "IMG";
         hasIframeSelected = selectedElement?.tagName === "IFRAME";
       }
 
-      setIsImageSelected(hasImageSelected);
       setIsIframeSelected(hasIframeSelected);
     };
 
@@ -314,20 +313,20 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
   }
 
   return (
-    <div 
+    <div
       className={`w-full max-w-6xl mx-auto rounded-xl overflow-hidden shadow-2xl ${
-        theme === 'dark' 
-          ? 'bg-gray-900' 
-          : 'bg-white border border-gray-200'
+        theme === "dark" ? "bg-gray-900" : "bg-white border border-gray-200"
       }`}
       data-theme={theme}
     >
       {/* Advanced Toolbar */}
-      <div className={`bg-opacity-95 backdrop-blur-sm border-b p-3 ${
-        theme === 'dark'
-          ? 'bg-gray-800 border-gray-700'
-          : 'bg-gray-50 border-gray-200'
-      }`}>
+      <div
+        className={`bg-opacity-95 backdrop-blur-sm border-b p-3 ${
+          theme === "dark"
+            ? "bg-gray-800 border-gray-700"
+            : "bg-gray-50 border-gray-200"
+        }`}
+      >
         <div className="flex items-center flex-wrap gap-2">
           {/* 4. UTILS */}
           <button
@@ -380,65 +379,38 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
             <SelectTrigger className="min-w-32 max-w-42 h-8 text-sm select-trigger">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="select-content">
-              <SelectItem
-                value="0"
-                className="select-item"
-              >
+            <SelectContent
+              className={`p-3 ${
+                theme === "dark"
+                  ? "bg-gray-800 text-gray-300"
+                  : "bg-white text-gray-900"
+              }`}
+            >
+              <SelectItem value="0" className="select-item">
                 Normal text
               </SelectItem>
-              <SelectItem
-                value="1"
-                className="select-item"
-              >
+              <SelectItem value="1" className="select-item">
                 <span className="text-2xl font-bold">Heading 1</span>
               </SelectItem>
-              <SelectItem
-                value="2"
-                className="select-item"
-              >
+              <SelectItem value="2" className="select-item">
                 <span className="text-xl font-bold">Heading 2</span>
               </SelectItem>
-              <SelectItem
-                value="3"
-                className="select-item"
-              >
+              <SelectItem value="3" className="select-item">
                 <span className="text-lg font-bold">Heading 3</span>
               </SelectItem>
-              <SelectItem
-                value="4"
-                className="select-item"
-              >
+              <SelectItem value="4" className="select-item">
                 <span className="text-base font-bold">Heading 4</span>
               </SelectItem>
-              <SelectItem
-                value="5"
-                className="select-item"
-              >
+              <SelectItem value="5" className="select-item">
                 <span className="text-sm font-bold">Heading 5</span>
               </SelectItem>
-              <SelectItem
-                value="6"
-                className="select-item"
-              >
+              <SelectItem value="6" className="select-item">
                 <span className="text-xs font-bold">Heading 6</span>
               </SelectItem>
             </SelectContent>
           </Select>
 
-          <TextFormattingTools
-            editor={editor}
-            onAddImage={() => setShowUploadArea(true)}
-          />
-
-          <div className="toolbar-separator"></div>
-
-          <ColorPicker editor={editor} />
-          <HighlightPicker editor={editor} />
-          <LineSpacing editor={editor} />
-
-          <div className="toolbar-separator"></div>
-
+          <TextFormattingTools editor={editor} />
           {/* Blockquote */}
           <button
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -447,21 +419,8 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
             }`}
             title="Blockquote"
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
-              <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z" />
-            </svg>
+            <BlockquoteIcon />
           </button>
-
           {/* Code Block */}
           <button
             onClick={() => editor.chain().focus().toggleCodeBlock().run()}
@@ -470,23 +429,15 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
             }`}
             title="Code Block"
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="16,18 22,12 16,6" />
-              <polyline points="8,6 2,12 8,18" />
-            </svg>
+            <CodeBlockIcon />
           </button>
 
           <div className="toolbar-separator"></div>
+          <ColorPicker editor={editor} />
+          <HighlightPicker editor={editor} />
+          <LineSpacing editor={editor} />
 
+          <div className="toolbar-separator"></div>
           {/* Lists */}
           <button
             onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -495,23 +446,7 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
             }`}
             title="Bullet List"
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <line x1="8" y1="6" x2="21" y2="6" />
-              <line x1="8" y1="12" x2="21" y2="12" />
-              <line x1="8" y1="18" x2="21" y2="18" />
-              <line x1="3" y1="6" x2="3.01" y2="6" />
-              <line x1="3" y1="12" x2="3.01" y2="12" />
-              <line x1="3" y1="18" x2="3.01" y2="18" />
-            </svg>
+            <BulletListIcon />
           </button>
           <button
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -520,23 +455,7 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
             }`}
             title="Numbered List"
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <line x1="10" y1="6" x2="21" y2="6" />
-              <line x1="10" y1="12" x2="21" y2="12" />
-              <line x1="10" y1="18" x2="21" y2="18" />
-              <path d="M4 6h1v4" />
-              <path d="M4 10h2" />
-              <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" />
-            </svg>
+            <NumberedListIcon />
           </button>
           <button
             onClick={() => editor.chain().focus().toggleTaskList().run()}
@@ -545,20 +464,16 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
             }`}
             title="Task List"
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M9 11l3 3L22 4" />
-              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
-            </svg>
+            <TaskListIcon />
           </button>
+          <div className="toolbar-separator"></div>
+          {/* Media Controls */}
+          <LinkControls editor={editor} />
+          <VideoControls editor={editor} />
+          <ImageControls
+            editor={editor}
+            onAddImage={() => setShowUploadArea(true)}
+          />
 
           <div className="toolbar-separator"></div>
 
@@ -567,7 +482,6 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
           <div className="toolbar-separator"></div>
 
           {/* 2. MEDIA FUNCTIONS (handled in TextFormattingTools now) */}
-          <ImageControls editor={editor} isImageSelected={isImageSelected} />
           <IframeControls editor={editor} isIframeSelected={isIframeSelected} />
 
           {/* 3. TABLE FUNCTIONS */}
@@ -578,9 +492,9 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
             <button
               onClick={toggleTheme}
               className="toolbar-button"
-              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
             >
-              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
             </button>
           )}
 
@@ -616,11 +530,11 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       )}
 
       {/* Editor Content */}
-      <div className={`p-6 min-h-[400px] ${
-        theme === 'dark' 
-          ? 'bg-gray-900 text-white' 
-          : 'bg-white text-gray-900'
-      }`}>
+      <div
+        className={`p-6 min-h-[400px] ${
+          theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+        }`}
+      >
         <EditorContent editor={editor} />
       </div>
     </div>

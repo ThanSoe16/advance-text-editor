@@ -84,7 +84,8 @@
 [data-theme="dark"] .ProseMirror {
   outline: none;
   padding: 0;
-  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.7;
   color: #f8f9fa;
   background: transparent;
@@ -94,12 +95,12 @@
 [data-theme="light"] .ProseMirror {
   outline: none;
   padding: 0;
-  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.7;
   color: #1f2937;
   background: transparent;
 }
-
 
 .ProseMirror p.is-editor-empty:first-child::before {
   color: #6b7280;
@@ -142,7 +143,8 @@
   margin-bottom: 1rem;
 }
 
-.ProseMirror ul, .ProseMirror ol {
+.ProseMirror ul,
+.ProseMirror ol {
   padding-left: 1.5rem;
   margin-bottom: 1rem;
   margin-top: 0.5rem;
@@ -214,19 +216,21 @@
 }
 
 /* Regular Table Styles - Dark Theme */
-.ProseMirror table:not(.borderless-table) {
-  border-collapse: collapse;
+[data-theme="dark"] .ProseMirror table:not(.borderless-table) {
+  border-collapse: separate;
+  border-spacing: 0;
   width: 100%;
   margin: 1.5rem 0;
-  border: 1px solid #374151;
+  border: 2px solid #4b5563;
   background: rgba(31, 41, 55, 0.5);
   border-radius: 8px;
   overflow: hidden;
 }
 
-.ProseMirror table:not(.borderless-table) td,
-.ProseMirror table:not(.borderless-table) th {
-  border: 1px solid #374151;
+[data-theme="dark"] .ProseMirror table:not(.borderless-table) td,
+[data-theme="dark"] .ProseMirror table:not(.borderless-table) th {
+  border-right: 1px solid #374151;
+  border-bottom: 1px solid #374151;
   padding: 0.75rem 1rem;
   vertical-align: top;
   min-width: 80px;
@@ -234,15 +238,67 @@
   background: rgba(31, 41, 55, 0.3);
 }
 
-.ProseMirror table:not(.borderless-table) th {
+[data-theme="dark"] .ProseMirror table:not(.borderless-table) td:last-child,
+[data-theme="dark"] .ProseMirror table:not(.borderless-table) th:last-child {
+  border-right: none;
+}
+
+[data-theme="dark"] .ProseMirror table:not(.borderless-table) tr:last-child td {
+  border-bottom: none;
+}
+
+[data-theme="dark"] .ProseMirror table:not(.borderless-table) th {
   background: rgba(55, 65, 81, 0.8);
   font-weight: 600;
   color: #ffffff;
   text-align: left;
 }
 
-.ProseMirror table:not(.borderless-table) tr:hover td {
+[data-theme="dark"] .ProseMirror table:not(.borderless-table) tr:hover td {
   background: rgba(55, 65, 81, 0.4);
+}
+
+/* Regular Table Styles - Light Theme */
+[data-theme="light"] .ProseMirror table:not(.borderless-table) {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  margin: 1.5rem 0;
+  border: 2px solid #d1d5db;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+[data-theme="light"] .ProseMirror table:not(.borderless-table) td,
+[data-theme="light"] .ProseMirror table:not(.borderless-table) th {
+  border-right: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.75rem 1rem;
+  vertical-align: top;
+  min-width: 80px;
+  color: #374151;
+  background: #f9fafb;
+}
+
+[data-theme="light"] .ProseMirror table:not(.borderless-table) td:last-child,
+[data-theme="light"] .ProseMirror table:not(.borderless-table) th:last-child {
+  border-right: none;
+}
+
+[data-theme="light"] .ProseMirror table:not(.borderless-table) tr:last-child td {
+  border-bottom: none;
+}
+
+[data-theme="light"] .ProseMirror table:not(.borderless-table) th {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #111827;
+  text-align: left;
+}
+
+[data-theme="light"] .ProseMirror table:not(.borderless-table) tr:hover td {
+  background: #f3f4f6;
 }
 
 /* Table cell focus styling */
@@ -276,95 +332,77 @@
   color: #374151;
 }
 
-/* Image Controls Container - Dark Theme */
-[data-theme="dark"] .image-controls-container {
-  background: #374151;
+/* Select Box Theme Styles - Higher specificity for Radix UI */
+[data-theme="dark"] .select-trigger,
+[data-theme="dark"] [data-radix-select-trigger],
+[data-theme="dark"] button[data-radix-select-trigger] {
+  background-color: #374151 !important;
+  border: 1px solid #4b5563 !important;
+  color: #d1d5db !important;
 }
 
-[data-theme="dark"] .image-controls-label {
-  color: #d1d5db;
+[data-theme="dark"] .select-content,
+[data-theme="dark"] [data-radix-select-content],
+[data-theme="dark"] div[data-radix-select-content] {
+  background: #1f2937 !important;
+  border: 1px solid #4b5563 !important;
+  color: #d1d5db !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
-[data-theme="dark"] .image-controls-border {
-  border-left: 1px solid #4b5563;
+[data-theme="dark"] .select-item,
+[data-theme="dark"] [data-radix-select-item],
+[data-theme="dark"] div[data-radix-select-item] {
+  color: #d1d5db !important;
+  background: transparent !important;
 }
 
-[data-theme="dark"] .image-controls-input {
-  background: #1f2937;
-  color: white;
-  border: 1px solid #4b5563;
+[data-theme="dark"] .select-item:hover,
+[data-theme="dark"] .select-item:focus,
+[data-theme="dark"] [data-radix-select-item]:hover,
+[data-theme="dark"] [data-radix-select-item]:focus,
+[data-theme="dark"] [data-radix-select-item][data-highlighted],
+[data-theme="dark"] div[data-radix-select-item][data-highlighted] {
+  background: #374151 !important;
+  color: white !important;
 }
 
-[data-theme="dark"] .image-controls-unit {
-  color: #9ca3af;
+/* Light Theme */
+[data-theme="light"] .select-trigger,
+[data-theme="light"] [data-radix-select-trigger],
+[data-theme="light"] button[data-radix-select-trigger] {
+  background: white !important;
+  border: 1px solid #d1d5db !important;
+  color: #374151 !important;
 }
 
-/* Image Controls Container - Light Theme */
-[data-theme="light"] .image-controls-container {
-  background: #f3f4f6;
+[data-theme="light"] .select-content,
+[data-theme="light"] [data-radix-select-content],
+[data-theme="light"] div[data-radix-select-content] {
+  background: white !important;
+  border: 1px solid #d1d5db !important;
+  color: #374151 !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
-[data-theme="light"] .image-controls-label {
-  color: #374151;
+[data-theme="light"] .select-item,
+[data-theme="light"] [data-radix-select-item],
+[data-theme="light"] div[data-radix-select-item] {
+  color: #374151 !important;
+  background: transparent !important;
 }
 
-[data-theme="light"] .image-controls-border {
-  border-left: 1px solid #d1d5db;
+[data-theme="light"] .select-item:hover,
+[data-theme="light"] .select-item:focus,
+[data-theme="light"] [data-radix-select-item]:hover,
+[data-theme="light"] [data-radix-select-item]:focus,
+[data-theme="light"] [data-radix-select-item][data-highlighted],
+[data-theme="light"] div[data-radix-select-item][data-highlighted] {
+  background: #f3f4f6 !important;
+  color: #111827 !important;
 }
-
-[data-theme="light"] .image-controls-input {
-  background: white;
-  color: #111827;
-  border: 1px solid #d1d5db;
-}
-
-[data-theme="light"] .image-controls-unit {
-  color: #6b7280;
-}
-
-/* Select Box Theme Styles */
-[data-theme="dark"] .select-trigger {
-  background: #374151;
-  border-color: #4b5563;
-  color: #d1d5db;
-}
-
-[data-theme="dark"] .select-content {
-  background: #1f2937;
-  border-color: #4b5563;
-  color: #d1d5db;
-}
-
-[data-theme="dark"] .select-item {
-  color: #d1d5db;
-}
-
-[data-theme="dark"] .select-item:focus {
-  background: #374151;
-  color: white;
-}
-
-[data-theme="light"] .select-trigger {
-  background: white;
-  border-color: #d1d5db;
-  color: #374151;
-}
-
-[data-theme="light"] .select-content {
-  background: white;
-  border-color: #d1d5db;
-  color: #374151;
-}
-
-[data-theme="light"] .select-item {
-  color: #374151;
-}
-
-[data-theme="light"] .select-item:focus {
-  background: #f3f4f6;
-  color: #111827;
-}
-
 
 /* Task List Styling */
 .ProseMirror ul[data-type="taskList"] {
@@ -413,7 +451,6 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-
 /* Image Selection */
 .ProseMirror img.ProseMirror-selectednode {
   outline: 3px solid #8b5cf6;
@@ -438,51 +475,6 @@
   outline: 3px solid #8b5cf6;
   outline-offset: 2px;
   border-radius: 8px;
-}
-
-
-/* Image Size Styles - High specificity to override inline styles */
-.ProseMirror img[data-size="small"] {
-  width: 200px !important;
-  max-width: 200px !important;
-  height: auto !important;
-}
-
-.ProseMirror img[data-size="medium"] {
-  width: 400px !important;
-  max-width: 400px !important;
-  height: auto !important;
-}
-
-.ProseMirror img[data-size="large"] {
-  width: 600px !important;
-  max-width: 600px !important;
-  height: auto !important;
-}
-
-.ProseMirror img[data-size="full"] {
-  width: 100% !important;
-  max-width: 100% !important;
-  height: auto !important;
-}
-
-/* Custom size styles - for images with custom dimensions */
-.ProseMirror img[data-custom-size="width-only"] {
-  max-width: none !important;
-  height: auto !important;
-}
-
-.ProseMirror img[data-custom-size="height-only"] {
-  max-height: none !important;
-  width: auto !important;
-}
-
-/* When both width and height are set, prevent aspect ratio constraints */
-.ProseMirror img[data-custom-size="both"] {
-  max-width: none !important;
-  max-height: none !important;
-  object-fit: fill !important;
-  /* This allows custom width AND height without aspect ratio preservation */
 }
 
 /* Image Alignment Styles - Higher specificity to override size margins */
@@ -539,7 +531,8 @@
   background-color: rgba(55, 65, 81, 0.8);
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas,
+    "Liberation Mono", Menlo, monospace;
   font-size: 0.875em;
   color: #fbbf24;
   border: 1px solid rgba(75, 85, 99, 0.3);
@@ -578,4 +571,3 @@
 .ProseMirror ol li::marker {
   color: #9ca3af;
 }
-

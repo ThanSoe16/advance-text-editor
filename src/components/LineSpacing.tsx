@@ -7,12 +7,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface LineSpacingProps {
   editor: Editor;
 }
 
 const LineSpacing: React.FC<LineSpacingProps> = ({ editor }) => {
+  const { theme } = useTheme();
   const [currentSpacing, setCurrentSpacing] = useState("1.5");
 
   const setLineSpacing = useCallback(
@@ -40,7 +43,14 @@ const LineSpacing: React.FC<LineSpacingProps> = ({ editor }) => {
       <SelectTrigger className="w-20 h-8 text-sm select-trigger">
         <SelectValue />
       </SelectTrigger>
-      <SelectContent className="select-content">
+      <SelectContent
+        className={cn(
+          theme === "dark"
+            ? "bg-gray-800 text-gray-300"
+            : "bg-white text-gray-900",
+          "select-content"
+        )}
+      >
         {spacingOptions.map((option) => (
           <SelectItem
             key={option.value}
