@@ -10,5 +10,3 @@ export { default as LineSpacing } from "../components/LineSpacing";
 export { default as TableControls } from "../components/TableControls";
 export { default as UploadArea } from "../components/UploadArea";
 export { ThemeProvider, useTheme } from "../contexts/ThemeContext";
-
-export type { ThemeContextType } from "../contexts/ThemeContext";
