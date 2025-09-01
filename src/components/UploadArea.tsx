@@ -36,58 +36,45 @@ const UploadArea: React.FC<UploadAreaProps> = ({ onUpload }) => {
   }, []);
 
   const handleFiles = useCallback(async (files: File[]) => {
-    // Filter and validate files - only images allowed
-    const validFiles = files.filter(file => {
-      const isValidImage = file.type.startsWith('image/');
-      const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB limit
-      
-      if (!isValidImage) {
-        console.warn(`File ${file.name} is not a valid image`);
-        return false;
-      }
-      
-      if (!isValidSize) {
-        console.warn(`File ${file.name} is too large (max 5MB)`);
-        return false;
-      }
-      
-      return true;
-    });
+    // For initial upload, only take the first file
+    const file = files[0];
+    if (!file) return;
 
-    // Check total files including existing previews
-    if (previews.length + validFiles.length > 3) {
-      alert(`Maximum 3 files allowed. You currently have ${previews.length} file(s).`);
+    // Validate file
+    const isValidImage = file.type.startsWith('image/');
+    const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB limit
+    
+    if (!isValidImage) {
+      alert('Please select a valid image file');
       return;
     }
-
-    if (validFiles.length === 0) {
-      alert('No valid image files selected');
+    
+    if (!isValidSize) {
+      alert('File is too large (max 5MB)');
       return;
     }
 
     setIsUploading(true);
     
     try {
-      // Create previews for new files
-      const newPreviews: FilePreview[] = [];
+      const reader = new FileReader();
+      const preview = await new Promise<FilePreview>((resolve) => {
+        reader.onload = () => {
+          resolve({
+            file,
+            src: reader.result as string,
+            type: 'image'
+          });
+        };
+        reader.readAsDataURL(file);
+      });
       
-      for (const file of validFiles) {
-        const reader = new FileReader();
-        const preview = await new Promise<FilePreview>((resolve) => {
-          reader.onload = () => {
-            resolve({
-              file,
-              src: reader.result as string,
-              type: 'image'
-            });
-          };
-          reader.readAsDataURL(file);
-        });
-        newPreviews.push(preview);
+      // If no previews exist, add the first one. Otherwise append to existing
+      if (previews.length === 0) {
+        setPreviews([preview]);
+      } else {
+        setPreviews(prev => [...prev, preview]);
       }
-      
-      // Append new previews to existing ones
-      setPreviews(prev => [...prev, ...newPreviews]);
     } catch (error) {
       console.error('Preview generation failed:', error);
       alert('Preview generation failed. Please try again.');
@@ -118,6 +105,20 @@ const UploadArea: React.FC<UploadAreaProps> = ({ onUpload }) => {
     }
   }, []);
 
+  const handleAddMore = useCallback(() => {
+    // Create a new input for adding more files
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const files = Array.from((e.target as HTMLInputElement).files || []);
+      if (files.length > 0) {
+        handleFiles(files);
+      }
+    };
+    input.click();
+  }, [handleFiles]);
+
   const handleUploadPreviews = useCallback(() => {
     if (previews.length > 0) {
       onUpload(previews.map(p => p.file));
@@ -139,7 +140,6 @@ const UploadArea: React.FC<UploadAreaProps> = ({ onUpload }) => {
       <input
         ref={fileInputRef}
         type="file"
-        multiple
         accept="image/*"
         onChange={handleFileSelect}
         className="hidden"
@@ -177,7 +177,7 @@ const UploadArea: React.FC<UploadAreaProps> = ({ onUpload }) => {
                 Click to upload or drag and drop
               </p>
               <p className="text-gray-400 text-sm">
-                Maximum 3 images, 5MB each
+                Select one image, 5MB max
               </p>
               <p className="text-gray-500 text-xs mt-1">
                 Supports: JPG, PNG, GIF, WebP
@@ -237,14 +237,7 @@ const UploadArea: React.FC<UploadAreaProps> = ({ onUpload }) => {
               onClick={handleUploadPreviews}
               className="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
             >
-              Insert All ({previews.length})
-            </button>
-            <button
-              onClick={handleClick}
-              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
-              title="Add more files"
-            >
-              + Add More
+              Insert Image{previews.length > 1 ? 's' : ''}
             </button>
           </div>
         </div>
