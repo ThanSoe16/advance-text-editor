@@ -28,7 +28,8 @@ import LineSpacing from "./LineSpacing";
 import TableControls from "./TableControls";
 import TextFormattingTools from "./TextFormattingTools";
 import AlignmentTools from "./AlignmentTools";
-import { Undo2, Redo2, RotateCcw } from "lucide-react";
+import { Undo2, Redo2, RotateCcw, Sun, Moon } from "lucide-react";
+import { useTheme } from "../contexts/ThemeContext";
 import {
   Select,
   SelectContent,
@@ -113,6 +114,7 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
   onChange,
   placeholder = "Start writing...",
 }) => {
+  const { theme, toggleTheme } = useTheme();
   const [showUploadArea, setShowUploadArea] = useState(false);
   const [isImageSelected, setIsImageSelected] = useState(false);
   const [isIframeSelected, setIsIframeSelected] = useState(false);
@@ -308,9 +310,20 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto bg-gray-900 rounded-xl overflow-hidden shadow-2xl">
+    <div 
+      className={`w-full max-w-6xl mx-auto rounded-xl overflow-hidden shadow-2xl ${
+        theme === 'dark' 
+          ? 'bg-gray-900' 
+          : 'bg-white border border-gray-200'
+      }`}
+      data-theme={theme}
+    >
       {/* Advanced Toolbar */}
-      <div className="bg-gray-800 bg-opacity-95 backdrop-blur-sm border-b border-gray-700 p-3">
+      <div className={`bg-opacity-95 backdrop-blur-sm border-b p-3 ${
+        theme === 'dark'
+          ? 'bg-gray-800 border-gray-700'
+          : 'bg-gray-50 border-gray-200'
+      }`}>
         <div className="flex items-center flex-wrap gap-2">
           {/* 4. UTILS */}
           <button
@@ -556,7 +569,14 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
           {/* 3. TABLE FUNCTIONS */}
           <TableControls editor={editor} />
 
-          <div className="toolbar-separator"></div>
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="toolbar-button"
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
 
           {/* Reset/Clear */}
           <button
@@ -590,7 +610,11 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       )}
 
       {/* Editor Content */}
-      <div className="p-6 min-h-[400px] bg-gray-900 text-white">
+      <div className={`p-6 min-h-[400px] ${
+        theme === 'dark' 
+          ? 'bg-gray-900 text-white' 
+          : 'bg-white text-gray-900'
+      }`}>
         <EditorContent editor={editor} />
       </div>
     </div>

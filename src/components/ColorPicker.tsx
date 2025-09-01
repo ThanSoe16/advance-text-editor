@@ -7,12 +7,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface ColorPickerProps {
   editor: Editor;
 }
 
 const ColorPicker: React.FC<ColorPickerProps> = ({ editor }) => {
+  const { theme } = useTheme();
   const [currentColor, setCurrentColor] = useState("#ffffff");
 
   const setColor = useCallback(
@@ -71,22 +73,36 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ editor }) => {
 
   return (
     <Select value={currentColor} onValueChange={setColor}>
-      <SelectTrigger className="w-10 h-8 bg-gray-700 border-gray-600 text-white text-sm p-1">
+      <SelectTrigger className={`w-10 h-8 text-sm p-1 ${
+        theme === 'dark' 
+          ? 'bg-gray-700 border-gray-600 text-white' 
+          : 'bg-white border-gray-300 text-gray-900'
+      }`}>
         <span
           className="w-4 h-4 rounded border border-gray-500"
           style={{ backgroundColor: currentColor }}
         />
       </SelectTrigger>
-      <SelectContent className="bg-gray-800 border-gray-600 p-3">
-        <div className="text-xs text-gray-400 mb-3 font-medium">Text Color</div>
+      <SelectContent className={`p-3 ${
+        theme === 'dark'
+          ? 'bg-gray-800 border-gray-600'
+          : 'bg-white border-gray-300'
+      }`}>
+        <div className={`text-xs mb-3 font-medium ${
+          theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+        }`}>Text Color</div>
         <div className="grid grid-cols-6 gap-2">
           {colors.map((color) => (
             <SelectItem key={color.value} value={color.value} className="p-0 h-auto">
               <button
-                className={`w-7 h-7 rounded border-2 hover:border-purple-400 transition-colors ${
+                className={`w-7 h-7 rounded border-2 transition-colors ${
                   currentColor === color.value
-                    ? "border-purple-400 ring-2 ring-purple-400 ring-opacity-30"
-                    : "border-gray-600"
+                    ? theme === 'dark'
+                      ? "border-purple-400 ring-2 ring-purple-400 ring-opacity-30"
+                      : "border-blue-400 ring-2 ring-blue-400 ring-opacity-30"
+                    : theme === 'dark'
+                      ? "border-gray-600 hover:border-purple-400"
+                      : "border-gray-300 hover:border-blue-400"
                 }`}
                 style={{ backgroundColor: color.value }}
               />

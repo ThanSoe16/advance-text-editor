@@ -7,12 +7,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface HighlightPickerProps {
   editor: Editor;
 }
 
 const HighlightPicker: React.FC<HighlightPickerProps> = ({ editor }) => {
+  const { theme } = useTheme();
   const [currentHighlight, setCurrentHighlight] = useState("");
 
   const setHighlight = useCallback(
@@ -47,7 +49,11 @@ const HighlightPicker: React.FC<HighlightPickerProps> = ({ editor }) => {
 
   return (
     <Select value={currentHighlight || "none"} onValueChange={setHighlight}>
-      <SelectTrigger className="w-10 h-8 bg-gray-700 border-gray-600 text-gray-300 text-sm p-1">
+      <SelectTrigger className={`w-10 h-8 text-sm p-1 ${
+        theme === 'dark' 
+          ? 'bg-gray-700 border-gray-600 text-gray-300' 
+          : 'bg-white border-gray-300 text-gray-900'
+      }`}>
         <span
           className="w-4 h-4 rounded border border-gray-500"
           style={{ 
@@ -58,16 +64,26 @@ const HighlightPicker: React.FC<HighlightPickerProps> = ({ editor }) => {
           }}
         />
       </SelectTrigger>
-      <SelectContent className="bg-gray-800 border-gray-600 text-gray-300 p-3">
-        <div className="text-xs text-gray-400 mb-3 font-medium">Highlight Color</div>
+      <SelectContent className={`p-3 ${
+        theme === 'dark'
+          ? 'bg-gray-800 border-gray-600 text-gray-300'
+          : 'bg-white border-gray-300 text-gray-900'
+      }`}>
+        <div className={`text-xs mb-3 font-medium ${
+          theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+        }`}>Highlight Color</div>
         <div className="grid grid-cols-6 gap-2">
           {colors.map((color) => (
             <SelectItem key={color.value} value={color.value} className="p-0 h-auto">
               <button
-                className={`w-7 h-7 rounded border-2 hover:border-purple-400 transition-colors ${
+                className={`w-7 h-7 rounded border-2 transition-colors ${
                   (currentHighlight || "none") === color.value
-                    ? "border-purple-400 ring-2 ring-purple-400 ring-opacity-30"
-                    : "border-gray-600"
+                    ? theme === 'dark'
+                      ? "border-purple-400 ring-2 ring-purple-400 ring-opacity-30"
+                      : "border-blue-400 ring-2 ring-blue-400 ring-opacity-30"
+                    : theme === 'dark'
+                      ? "border-gray-600 hover:border-purple-400"
+                      : "border-gray-300 hover:border-blue-400"
                 }`}
                 style={{ 
                   backgroundColor: color.value === "none" ? "transparent" : color.value,
