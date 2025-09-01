@@ -15,6 +15,8 @@ import { Underline } from "@tiptap/extension-underline";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
 import { Highlight } from "@tiptap/extension-highlight";
+import { TaskList } from "@tiptap/extension-task-list";
+import { TaskItem } from "@tiptap/extension-task-item";
 import { Node } from "@tiptap/core";
 import { useCallback, useState, useEffect } from "react";
 import UploadArea from "./UploadArea";
@@ -26,6 +28,7 @@ import LineSpacing from "./LineSpacing";
 import TableControls from "./TableControls";
 import TextFormattingTools from "./TextFormattingTools";
 import AlignmentTools from "./AlignmentTools";
+import { Undo2, Redo2, RotateCcw } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -175,6 +178,10 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       Highlight.configure({
         multicolor: true,
       }),
+      TaskList,
+      TaskItem.configure({
+        nested: true,
+      }),
       IframeExtension,
     ],
     content: value,
@@ -305,6 +312,23 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
       {/* Advanced Toolbar */}
       <div className="bg-gray-800 bg-opacity-95 backdrop-blur-sm border-b border-gray-700 p-3">
         <div className="flex items-center flex-wrap gap-2">
+          {/* 4. UTILS */}
+          <button
+            onClick={() => editor.chain().focus().undo().run()}
+            disabled={!editor.can().undo()}
+            className="toolbar-button"
+            title="Undo"
+          >
+            <Undo2 size={16} />
+          </button>
+          <button
+            onClick={() => editor.chain().focus().redo().run()}
+            disabled={!editor.can().redo()}
+            className="toolbar-button"
+            title="Redo"
+          >
+            <Redo2 size={16} />
+          </button>
           {/* 1. TEXT FUNCTIONS */}
           {/* Heading Dropdown */}
           <Select
@@ -398,6 +422,54 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
 
           <div className="toolbar-separator"></div>
 
+          {/* Blockquote */}
+          <button
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            className={`toolbar-button ${
+              editor.isActive("blockquote") ? "active" : ""
+            }`}
+            title="Blockquote"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
+              <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z" />
+            </svg>
+          </button>
+
+          {/* Code Block */}
+          <button
+            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+            className={`toolbar-button ${
+              editor.isActive("codeBlock") ? "active" : ""
+            }`}
+            title="Code Block"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="16,18 22,12 16,6" />
+              <polyline points="8,6 2,12 8,18" />
+            </svg>
+          </button>
+
+          <div className="toolbar-separator"></div>
+
           {/* Lists */}
           <button
             onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -449,6 +521,27 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
               <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" />
             </svg>
           </button>
+          <button
+            onClick={() => editor.chain().focus().toggleTaskList().run()}
+            className={`toolbar-button ${
+              editor.isActive("taskList") ? "active" : ""
+            }`}
+            title="Task List"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M9 11l3 3L22 4" />
+              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+            </svg>
+          </button>
 
           <div className="toolbar-separator"></div>
 
@@ -465,31 +558,13 @@ const AdvancedTipTapEditor: React.FC<AdvancedTipTapEditorProps> = ({
 
           <div className="toolbar-separator"></div>
 
-          {/* 4. UTILS */}
-          <button
-            onClick={() => editor.chain().focus().undo().run()}
-            disabled={!editor.can().undo()}
-            className="toolbar-button"
-            title="Undo"
-          >
-            ↶
-          </button>
-          <button
-            onClick={() => editor.chain().focus().redo().run()}
-            disabled={!editor.can().redo()}
-            className="toolbar-button"
-            title="Redo"
-          >
-            ↷
-          </button>
-
           {/* Reset/Clear */}
           <button
             onClick={() => editor.chain().focus().clearContent().run()}
             className="toolbar-button ml-auto"
             title="Clear Content"
           >
-            ↻
+            <RotateCcw size={16} />
           </button>
         </div>
       </div>

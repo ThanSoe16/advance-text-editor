@@ -78,6 +78,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ editor }) => {
         />
       </SelectTrigger>
       <SelectContent className="bg-gray-800 border-gray-600 p-3">
+        <div className="text-xs text-gray-400 mb-3 font-medium">Text Color</div>
         <div className="grid grid-cols-6 gap-2">
           {colors.map((color) => (
             <SelectItem key={color.value} value={color.value} className="p-0 h-auto">

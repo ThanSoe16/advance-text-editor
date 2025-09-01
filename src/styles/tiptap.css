@@ -207,6 +207,44 @@
   background: rgba(139, 92, 246, 0.2) !important;
 }
 
+/* Task List Styling */
+.ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.ProseMirror ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  margin: 0.5rem 0;
+  padding: 0;
+}
+
+.ProseMirror ul[data-type="taskList"] li > label {
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+  margin-top: 0.125rem;
+  user-select: none;
+}
+
+.ProseMirror ul[data-type="taskList"] li > label > input[type="checkbox"] {
+  accent-color: #8b5cf6;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.ProseMirror ul[data-type="taskList"] li > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.ProseMirror ul[data-type="taskList"] li[data-checked="true"] > div {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
 /* Images */
 .ProseMirror img {
   max-width: 100%;
